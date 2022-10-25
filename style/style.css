@@ -1,0 +1,229 @@
+@import url("https://fonts.googleapis.com/css2?family=Overpass:wght@300;400&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+body {
+  background-color: #FBF8F8;
+  font-family: Overpass, sans-serif;
+  font-weight: 300;
+}
+
+.header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  margin: 20px 136px;
+}
+
+.logoText {
+  font-size: 36px;
+  color: #575445;
+}
+
+.header img {
+  margin-left: 10px;
+}
+
+.container {
+  width: 100vw;
+  margin: 0 auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  padding-right: 15px;
+  padding-left: 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+.noteHeader {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  margin-bottom: 8px;
+  max-height: 55px;
+}
+
+.noteMainText {
+  max-height: 80px;
+}
+
+.noteActions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.notes,
+.notes2,
+.notes3,
+.notes4,
+.notes5,
+.notes6,
+.notes7 {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  width: 90%;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.note {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  background-color: lightyellow;
+  padding: 16px;
+  margin: 8px;
+  border-radius: 10px;
+  height: 200px;
+  width: 100%;
+  -webkit-box-shadow: 2px 2px 5px 2px #cacaca;
+          box-shadow: 2px 2px 5px 2px #cacaca;
+}
+
+input,
+textarea,
+select {
+  width: 95%;
+}
+
+.noteEdit {
+  padding: 4px;
+  cursor: pointer;
+}
+
+.noteDelete {
+  padding: 4px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.urgently {
+  background-color: #F5B7B1;
+}
+
+.undesirable {
+  background-color: #FDEBD0;
+}
+
+.delay {
+  background-color: #D4EFDF;
+}
+
+.dayFirst,
+.daySecond,
+.dayThird,
+.dayFourth,
+.dayFifth,
+.daySixth {
+  border-right: 1px solid #292C32;
+  min-height: 90vh;
+  width: calc(100vw/7);
+}
+
+.daySeventh {
+  border: none;
+  min-height: 90vh;
+  width: calc(100vw/7);
+}
+
+.noteDone {
+  background-color: #222222;
+  opacity: 0.5;
+}
+
+.dayFirstName,
+.daySecondName,
+.dayThirdName,
+.dayFourthName,
+.dayFifthName,
+.daySixthName,
+.daySeventhName {
+  font-size: 16px;
+  padding-left: 5px;
+  font-weight: 300;
+}
+
+.fa-solid,
+.fa-regular {
+  color: #FFFFFF;
+}
+
+.noteAdd,
+.noteSort,
+.noteAdd2,
+.noteSort2,
+.noteAdd3,
+.noteSort3,
+.noteAdd4,
+.noteSort4,
+.noteAdd5,
+.noteSort5,
+.noteAdd6,
+.noteSort6,
+.noteAdd7,
+.noteSort7 {
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+  background-color: #575445;
+  border: none;
+  width: 30px;
+  height: 30px;
+}
+
+.noteEdit,
+.noteDelete,
+.noteSave,
+.noteMarkMade {
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+  background-color: #575445;
+  border: none;
+}
+
+.noteMarkMade {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+/*# sourceMappingURL=style.css.map */
