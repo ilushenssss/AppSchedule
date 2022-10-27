@@ -85,7 +85,7 @@ function createNote(title, text) {
                 <option value=3>Можно отложить</option>
             </select>
     </div>
-        <button id="inputMade" class="noteMarkMade" type="button"><i class="fa-solid fa-check"></i></button>    
+        <button id="inputMade" class="noteMarkMade noteDone" disabled = "true" type="button"><i class="fa-solid fa-check"></i></button>    
     `;
 
     const editBtn = noteEl.querySelector('.noteEdit');
@@ -108,6 +108,8 @@ function createNote(title, text) {
         dateInput.classList.toggle('hidden');
         noteDate.classList.toggle('hidden');
         priorityInput.classList.toggle('hidden');
+        inputMade.disabled = true;
+        inputMade.classList.toggle('noteDone');
     });
 
     deleteBtn.addEventListener('click', (e) => {
@@ -133,6 +135,11 @@ function createNote(title, text) {
         deleteBtn.disabled = true;
         noteSave.disabled = true;
         inputMade.disabled = true;
+
+        editBtn.classList.add('noteDone');
+        deleteBtn.classList.add('noteDone');
+        noteSave.classList.add('noteDone');
+        inputMade.classList.add('noteDone');
     });
 
     noteSave.addEventListener('click', (e) => {
@@ -156,6 +163,9 @@ function createNote(title, text) {
         dateInput.classList.toggle('hidden');
         noteDate.classList.toggle('hidden');
         priorityInput.classList.toggle('hidden');
+
+        inputMade.disabled = false;
+        inputMade.classList.toggle('noteDone');
 
         sortTime(notesEl);
         sortTime(notesEl2);
