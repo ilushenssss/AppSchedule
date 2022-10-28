@@ -117,6 +117,8 @@ function createNote(title, text) {
 
         inputMade.classList.add('noteDone');
         inputMade.disabled = true;
+
+        noteEl.removeAttribute('style');
     });
 
     deleteBtn.addEventListener('click', (e) => {
@@ -127,10 +129,28 @@ function createNote(title, text) {
         titleEl.innerText = e.target.value;
         noteSave.classList.remove('noteDone');
         noteSave.disabled = false;
+        if (e.target.value.length > 20) {
+            noteSave.disabled = true;
+            noteSave.classList.add('noteDone');
+            alert('Слишком много текста в заголовке');
+        }
+        else if (e.target.value.split('\n').length <= 20) {
+            noteSave.disabled = false;
+            noteSave.classList.remove('noteDone');
+        }
     });
 
     textInput.addEventListener('input', (e) => {
         textEl.innerText = e.target.value;
+        if (e.target.value.split('\n').length > 5) {
+            noteSave.disabled = true;
+            noteSave.classList.add('noteDone');
+            alert('Слишком много текста в описании');
+        }
+        else if (e.target.value.split('\n').length <= 5) {
+            noteSave.disabled = false;
+            noteSave.classList.remove('noteDone');
+        }
     });
 
     dateInput.addEventListener('input', (e) => {
