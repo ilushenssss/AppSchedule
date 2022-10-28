@@ -52,6 +52,10 @@ const addBtn7 = document.querySelector('.noteAdd7');
 function createNote(title, text) {
     let actualMin = newDate().getMinutes();
     let actualHour = newDate().getHours();
+    if (actualMin < 10) {
+        let min = actualMin;
+        actualMin = `0${min}`;
+    };
     const noteEl = document.createElement('div');
     noteEl.classList.add('note');
     noteEl.setAttribute('date-hours', `${actualHour}:${actualMin}`);
@@ -59,7 +63,7 @@ function createNote(title, text) {
     <div class="noteHeader">
         <div>
             <p id="noteTitle" class="hidden"></p>
-            <textarea id="noteTitleInput" placeholder="${title}"></textarea>
+            <textarea required id="noteTitleInput" placeholder="${title}"></textarea>
         </div>
         <div class="noteActions">
             <div>
@@ -69,7 +73,7 @@ function createNote(title, text) {
                 <button class="noteDelete"><i class="fa-regular fa-trash-can"></i></button>
             </div>
             <div>
-                <button class="noteSave" type="button"><i class="fa-regular fa-floppy-disk"></i></button>
+                <button class="noteSave noteDone" disabled type="button"><i class="fa-regular fa-floppy-disk"></i></button>
             </div>
         </div>
     </div>
@@ -101,15 +105,18 @@ function createNote(title, text) {
     const inputMade = noteEl.querySelector('#inputMade');
 
     editBtn.addEventListener('click', (e) => {
-        titleEl.classList.toggle('hidden');
-        textEl.classList.toggle('hidden');
-        titleInput.classList.toggle('hidden');
-        textInput.classList.toggle('hidden');
-        dateInput.classList.toggle('hidden');
-        noteDate.classList.toggle('hidden');
-        priorityInput.classList.toggle('hidden');
+        titleEl.classList.add('hidden');
+        textEl.classList.add('hidden');
+        titleInput.classList.remove('hidden');
+        textInput.classList.remove('hidden');
+        dateInput.classList.remove('hidden');
+        noteDate.classList.add('hidden');
+        priorityInput.classList.remove('hidden');
         inputMade.disabled = true;
-        inputMade.classList.toggle('noteDone');
+        inputMade.classList.remove('noteDone');
+
+        inputMade.classList.add('noteDone');
+        inputMade.disabled = true;
     });
 
     deleteBtn.addEventListener('click', (e) => {
@@ -118,6 +125,8 @@ function createNote(title, text) {
 
     titleInput.addEventListener('input', (e) => {
         titleEl.innerText = e.target.value;
+        noteSave.classList.remove('noteDone');
+        noteSave.disabled = false;
     });
 
     textInput.addEventListener('input', (e) => {
@@ -156,17 +165,17 @@ function createNote(title, text) {
             noteEl.classList.remove('undesirable');
             noteEl.classList.add('delay');
         }
-        titleEl.classList.toggle('hidden');
-        textEl.classList.toggle('hidden');
-        titleInput.classList.toggle('hidden');
-        textInput.classList.toggle('hidden');
-        dateInput.classList.toggle('hidden');
-        noteDate.classList.toggle('hidden');
-        priorityInput.classList.toggle('hidden');
+        titleEl.classList.remove('hidden');
+        textEl.classList.remove('hidden');
+        titleInput.classList.add('hidden');
+        textInput.classList.add('hidden');
+        dateInput.classList.add('hidden');
+        noteDate.classList.remove('hidden');
+        priorityInput.classList.add('hidden');
+
+        inputMade.classList.remove('noteDone');
 
         inputMade.disabled = false;
-        inputMade.classList.toggle('noteDone');
-
         sortTime(notesEl);
         sortTime(notesEl2);
         sortTime(notesEl3);
@@ -174,6 +183,10 @@ function createNote(title, text) {
         sortTime(notesEl5);
         sortTime(notesEl6);
         sortTime(notesEl7);
+
+        let targetHeight = textEl.offsetHeight;
+
+        noteEl.style.height = targetHeight + 150 + 'px';
     })
 
     return noteEl;
