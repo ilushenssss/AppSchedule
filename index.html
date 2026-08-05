@@ -7,20 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Floater</title>
     <link rel="stylesheet" href="style/style.css">
-    <script src="https://kit.fontawesome.com/d17657449b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="icon" href="img/icon.png" type="image/x-icon">
 </head>
 
 <body>
     <div class="header">
         <h1 class="logoText">Floater</h1>
-        <img src="img/logo.png" alt="" height="36px">
+        <img src="img/logo.png" alt="Floater logo">
+    </div>
+
+    <div class="weekNav">
+        <button id="prevWeek" type="button" title="Previous week"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="weekNavCenter">
+            <span id="weekLabel"></span>
+            <button id="todayWeek" type="button" title="Jump to current week">Today</button>
+        </div>
+        <button id="nextWeek" type="button" title="Next week"><i class="fa-solid fa-chevron-right"></i></button>
     </div>
 
     <div class="container">
         <div class="dayFirst">
             <h2 class="dayFirstName">1</h2>
-            <button class="noteAdd" type="button"><i class="fa-solid fa-plus"></i></button>
+            <button class="noteAdd" type="button" title="Add task"><i class="fa-solid fa-plus"></i></button>
             <div class="notes">
 
             </div>
@@ -28,7 +39,7 @@
 
         <div class="daySecond">
             <h2 class="daySecondName">2</h2>
-            <button class="noteAdd2" type="button"><i class="fa-solid fa-plus"></i></button>
+            <button class="noteAdd2" type="button" title="Add task"><i class="fa-solid fa-plus"></i></button>
             <div class="notes2">
 
             </div>
@@ -36,7 +47,7 @@
 
         <div class="dayThird">
             <h2 class="dayThirdName">3</h2>
-            <button class="noteAdd3" type="button"><i class="fa-solid fa-plus"></i></button>
+            <button class="noteAdd3" type="button" title="Add task"><i class="fa-solid fa-plus"></i></button>
             <div class="notes3">
 
             </div>
@@ -44,7 +55,7 @@
 
         <div class="dayFourth">
             <h2 class="dayFourthName">4</h2>
-            <button class="noteAdd4" type="button"><i class="fa-solid fa-plus"></i></button>
+            <button class="noteAdd4" type="button" title="Add task"><i class="fa-solid fa-plus"></i></button>
             <div class="notes4">
 
             </div>
@@ -52,7 +63,7 @@
 
         <div class="dayFifth">
             <h2 class="dayFifthName">5</h2>
-            <button class="noteAdd5" type="button"><i class="fa-solid fa-plus"></i></button>
+            <button class="noteAdd5" type="button" title="Add task"><i class="fa-solid fa-plus"></i></button>
             <div class="notes5">
 
             </div>
@@ -60,7 +71,7 @@
 
         <div class="daySixth">
             <h2 class="daySixthName">6</h2>
-            <button class="noteAdd6" type="button"><i class="fa-solid fa-plus"></i></button>
+            <button class="noteAdd6" type="button" title="Add task"><i class="fa-solid fa-plus"></i></button>
             <div class="notes6">
 
             </div>
@@ -68,7 +79,7 @@
 
         <div class="daySeventh">
             <h2 class="daySeventhName">7</h2>
-            <button class="noteAdd7" type="button"><i class="fa-solid fa-plus"></i></button>
+            <button class="noteAdd7" type="button" title="Add task"><i class="fa-solid fa-plus"></i></button>
             <div class="notes7">
 
             </div>
@@ -76,7 +87,6 @@
 
     </div>
     <script src="scripts/app.js"></script>
-    <script src="scripts/markup.js"></script>
 </body>
 
 </html>

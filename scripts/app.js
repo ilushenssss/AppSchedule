@@ -1,95 +1,111 @@
 "use strict";
 
-let now = new Date();
-let year = now.getFullYear();
-let month = now.getMonth();
-let day = now.getDate();
-let dayWeek = now.getDay();
-let hours = now.getHours();
-let minutes = now.getMinutes();
-if (minutes < 10) {
-    let min = minutes;
-    minutes = `0${min}`;
-};
+const STORAGE_PREFIX = 'floater-notes-';
+const CLASS_SUFFIXES = ['', '2', '3', '4', '5', '6', '7'];
+const ORDINAL_SUFFIXES = ['First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh'];
+const WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const PRIORITY_CLASSES = { '1': 'urgently', '2': 'undesirable', '3': 'delay' };
 
-function sortTime(noteExam) {
-    for (let i = 0; i < noteExam.children.length; i++) {
-        for (let j = i; j < noteExam.children.length; j++) {
-            if (noteExam.children[i].getAttribute('date-hours') > noteExam.children[j].getAttribute('date-hours')) {
-                let replaceNode = noteExam.replaceChild(noteExam.children[j], noteExam.children[i]);
-                noteExam.appendChild(replaceNode);
-            }
-        }
+function pad(value) {
+    return String(value).padStart(2, '0');
+}
+
+function getWeekdayName(date) {
+    return WEEKDAY_NAMES[date.getDay()];
+}
+
+function formatDateKey(date) {
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
+function currentTime() {
+    const time = new Date();
+    return `${pad(time.getHours())}:${pad(time.getMinutes())}`;
+}
+
+const now = new Date();
+const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+function getWeekDates(offset) {
+    return Array.from({ length: 7 }, (_, i) =>
+        new Date(today.getFullYear(), today.getMonth(), today.getDate() + offset * 7 + i)
+    );
+}
+
+function formatWeekLabel(weekDates) {
+    const start = weekDates[0];
+    const end = weekDates[6];
+    const sameMonth = start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear();
+    const startLabel = `${MONTH_NAMES[start.getMonth()]} ${start.getDate()}`;
+    const endLabel = sameMonth ? `${end.getDate()}` : `${MONTH_NAMES[end.getMonth()]} ${end.getDate()}`;
+    const yearLabel = start.getFullYear() === end.getFullYear()
+        ? `${end.getFullYear()}`
+        : `${start.getFullYear()}/${end.getFullYear()}`;
+    return `${startLabel} – ${endLabel}, ${yearLabel}`;
+}
+
+function sortTime(notesContainer) {
+    const sortedNotes = Array.from(notesContainer.children).sort((a, b) =>
+        a.getAttribute('date-hours').localeCompare(b.getAttribute('date-hours'))
+    );
+    sortedNotes.forEach((noteEl) => notesContainer.appendChild(noteEl));
+}
+
+function loadNotes(dateKey) {
+    try {
+        return JSON.parse(localStorage.getItem(STORAGE_PREFIX + dateKey)) || [];
+    } catch (error) {
+        return [];
     }
-};
+}
 
-function newDate() {
-    let newNow = new Date();
-    return newNow;
-};
+function saveNotes(dateKey, notesContainer) {
+    const notes = Array.from(notesContainer.children).map((noteEl) => ({
+        title: noteEl.querySelector('#noteTitleInput').value,
+        text: noteEl.querySelector('#noteTextInput').value,
+        time: noteEl.getAttribute('date-hours'),
+        priority: noteEl.querySelector('#priorityInput').value,
+        done: noteEl.classList.contains('noteDone'),
+    }));
+    localStorage.setItem(STORAGE_PREFIX + dateKey, JSON.stringify(notes));
+}
 
-const notesEl = document.querySelector('.notes');
-const addBtn = document.querySelector('.noteAdd');
+function createNote(dateKey, notesContainer, savedNote) {
+    const time = savedNote ? savedNote.time : currentTime();
 
-const notesEl2 = document.querySelector('.notes2');
-const addBtn2 = document.querySelector('.noteAdd2');
-
-const notesEl3 = document.querySelector('.notes3');
-const addBtn3 = document.querySelector('.noteAdd3');
-
-const notesEl4 = document.querySelector('.notes4');
-const addBtn4 = document.querySelector('.noteAdd4');
-
-const notesEl5 = document.querySelector('.notes5');
-const addBtn5 = document.querySelector('.noteAdd5');
-
-const notesEl6 = document.querySelector('.notes6');
-const addBtn6 = document.querySelector('.noteAdd6');
-
-const notesEl7 = document.querySelector('.notes7');
-const addBtn7 = document.querySelector('.noteAdd7');
-
-function createNote(title, text) {
-    let actualMin = newDate().getMinutes();
-    let actualHour = newDate().getHours();
-    if (actualMin < 10) {
-        let min = actualMin;
-        actualMin = `0${min}`;
-    };
     const noteEl = document.createElement('div');
     noteEl.classList.add('note');
-    noteEl.setAttribute('date-hours', `${actualHour}:${actualMin}`);
+    noteEl.setAttribute('date-hours', time);
     noteEl.innerHTML = `
     <div class="noteHeader">
-        <div>
+        <div class="noteTitleWrap">
             <p id="noteTitle" class="hidden"></p>
-            <textarea required id="noteTitleInput" placeholder="${title}"></textarea>
+            <textarea required id="noteTitleInput" maxlength="20" placeholder="Task"></textarea>
         </div>
         <div class="noteActions">
-            <div>
-                <button class="noteEdit"><i class="fa-regular fa-pen-to-square"></i></button>
-            </div>
-            <div>
-                <button class="noteDelete"><i class="fa-regular fa-trash-can"></i></button>
-            </div>
-            <div>
-                <button class="noteSave noteDone" disabled type="button"><i class="fa-regular fa-floppy-disk"></i></button>
-            </div>
+            <button class="noteEdit hidden" type="button" title="Edit task"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="noteDelete" type="button" title="Delete task"><i class="fa-regular fa-trash-can"></i></button>
         </div>
     </div>
 
     <div class="noteMainText">
-        <p id="noteDate"  class="hidden">${actualHour}:${actualMin}</p>
-        <input id="dateInput" type="time" value="${actualHour}:${actualMin}"></input>
-        <p id="noteText" class="hidden" ></p>
-        <textarea id="noteTextInput" placeholder="${text}"></textarea>
-            <select id="priorityInput">
-                <option value=1>Неотложно</option>
-                <option value=2>Нежелательно откладывать</option>
-                <option value=3>Можно отложить</option>
-            </select>
+        <p id="noteDate" class="hidden">${time}</p>
+        <input id="dateInput" type="time" value="${time}">
+        <p id="noteText" class="hidden"></p>
+        <textarea id="noteTextInput" placeholder="Materials/location"></textarea>
+        <select id="priorityInput">
+            <option value="1">Urgent</option>
+            <option value="2">Should not be delayed</option>
+            <option value="3">Can be postponed</option>
+        </select>
     </div>
-        <button id="inputMade" class="noteMarkMade noteDone" disabled = "true" type="button"><i class="fa-solid fa-check"></i></button>    
+    <button class="noteSave" type="button" disabled title="Save this task">
+        <i class="fa-regular fa-floppy-disk"></i><span>Save Task</span>
+    </button>
+    <button id="inputMade" class="noteMarkMade hidden" type="button" disabled title="Mark task as done">
+        <i class="fa-solid fa-check"></i><span>Mark as Done</span>
+    </button>
     `;
 
     const editBtn = noteEl.querySelector('.noteEdit');
@@ -104,7 +120,15 @@ function createNote(title, text) {
     const priorityInput = noteEl.querySelector('#priorityInput');
     const inputMade = noteEl.querySelector('#inputMade');
 
-    editBtn.addEventListener('click', (e) => {
+    const persist = () => saveNotes(dateKey, notesContainer);
+
+    function refreshSaveState() {
+        const titleValid = titleInput.value.trim().length > 0;
+        const textValid = textInput.value.split('\n').length <= 5;
+        noteSave.disabled = !(titleValid && textValid);
+    }
+
+    function enterEditMode() {
         titleEl.classList.add('hidden');
         textEl.classList.add('hidden');
         titleInput.classList.remove('hidden');
@@ -112,79 +136,19 @@ function createNote(title, text) {
         dateInput.classList.remove('hidden');
         noteDate.classList.add('hidden');
         priorityInput.classList.remove('hidden');
-        inputMade.disabled = true;
-        inputMade.classList.remove('noteDone');
 
-        inputMade.classList.add('noteDone');
-        inputMade.disabled = true;
+        editBtn.classList.add('hidden');
+        inputMade.classList.add('hidden');
+        noteSave.classList.remove('hidden');
+        refreshSaveState();
 
         noteEl.removeAttribute('style');
-    });
+    }
 
-    deleteBtn.addEventListener('click', (e) => {
-        noteEl.remove();
-    });
+    function commitNote() {
+        noteEl.classList.remove('urgently', 'undesirable', 'delay');
+        noteEl.classList.add(PRIORITY_CLASSES[priorityInput.value]);
 
-    titleInput.addEventListener('input', (e) => {
-        titleEl.innerText = e.target.value;
-        noteSave.classList.remove('noteDone');
-        noteSave.disabled = false;
-        if (e.target.value.length > 20) {
-            noteSave.disabled = true;
-            noteSave.classList.add('noteDone');
-            alert('Слишком много текста в заголовке');
-        }
-        else if (e.target.value.split('\n').length <= 20) {
-            noteSave.disabled = false;
-            noteSave.classList.remove('noteDone');
-        }
-    });
-
-    textInput.addEventListener('input', (e) => {
-        textEl.innerText = e.target.value;
-        if (e.target.value.split('\n').length > 5) {
-            noteSave.disabled = true;
-            noteSave.classList.add('noteDone');
-            alert('Слишком много текста в описании');
-        }
-        else if (e.target.value.split('\n').length <= 5) {
-            noteSave.disabled = false;
-            noteSave.classList.remove('noteDone');
-        }
-    });
-
-    dateInput.addEventListener('input', (e) => {
-        noteDate.innerText = e.target.value;
-        noteEl.setAttribute('date-hours', e.target.value);
-    });
-
-    inputMade.addEventListener('click', (e) => {
-        noteEl.classList.add('noteDone');
-        editBtn.disabled = true;
-        deleteBtn.disabled = true;
-        noteSave.disabled = true;
-        inputMade.disabled = true;
-
-        editBtn.classList.add('noteDone');
-        deleteBtn.classList.add('noteDone');
-        noteSave.classList.add('noteDone');
-        inputMade.classList.add('noteDone');
-    });
-
-    noteSave.addEventListener('click', (e) => {
-        if (priorityInput.value == 1) {
-            noteEl.classList.remove('undesirable');
-            noteEl.classList.remove('delay');
-            noteEl.classList.add('urgently');
-        } else if (priorityInput.value == 2) {
-            noteEl.classList.remove('delay');
-            noteEl.classList.remove('urgently');
-            noteEl.classList.add('undesirable');
-        } else if (priorityInput.value == 3) {
-            noteEl.classList.remove('urgently');
-            noteEl.classList.remove('undesirable');
-            noteEl.classList.add('delay');
-        }
         titleEl.classList.remove('hidden');
         textEl.classList.remove('hidden');
         titleInput.classList.add('hidden');
@@ -193,56 +157,131 @@ function createNote(title, text) {
         noteDate.classList.remove('hidden');
         priorityInput.classList.add('hidden');
 
-        inputMade.classList.remove('noteDone');
-
+        editBtn.classList.remove('hidden');
+        noteSave.classList.add('hidden');
+        inputMade.classList.remove('hidden');
         inputMade.disabled = false;
-        sortTime(notesEl);
-        sortTime(notesEl2);
-        sortTime(notesEl3);
-        sortTime(notesEl4);
-        sortTime(notesEl5);
-        sortTime(notesEl6);
-        sortTime(notesEl7);
 
-        let targetHeight = textEl.offsetHeight;
+        sortTime(notesContainer);
 
+        const targetHeight = textEl.offsetHeight;
         noteEl.style.height = targetHeight + 150 + 'px';
-    })
+    }
+
+    function markDone() {
+        noteEl.classList.add('noteDone');
+        editBtn.disabled = true;
+        inputMade.disabled = true;
+    }
+
+    editBtn.addEventListener('click', enterEditMode);
+
+    deleteBtn.addEventListener('click', () => {
+        noteEl.remove();
+        persist();
+    });
+
+    titleInput.addEventListener('input', (e) => {
+        titleEl.innerText = e.target.value;
+        refreshSaveState();
+    });
+
+    let descriptionWithinLimit = true;
+    textInput.addEventListener('input', (e) => {
+        textEl.innerText = e.target.value;
+        const withinLimit = e.target.value.split('\n').length <= 5;
+        if (!withinLimit && descriptionWithinLimit) {
+            alert('Description is too long (max 5 lines)');
+        }
+        descriptionWithinLimit = withinLimit;
+        refreshSaveState();
+    });
+
+    dateInput.addEventListener('input', (e) => {
+        noteDate.innerText = e.target.value;
+        noteEl.setAttribute('date-hours', e.target.value);
+    });
+
+    inputMade.addEventListener('click', () => {
+        markDone();
+        persist();
+    });
+
+    noteSave.addEventListener('click', () => {
+        commitNote();
+        persist();
+    });
+
+    notesContainer.appendChild(noteEl);
+
+    if (savedNote) {
+        titleInput.value = savedNote.title;
+        textInput.value = savedNote.text;
+        titleEl.innerText = savedNote.title;
+        textEl.innerText = savedNote.text;
+        priorityInput.value = savedNote.priority;
+        dateInput.value = savedNote.time;
+        noteDate.innerText = savedNote.time;
+
+        commitNote();
+        if (savedNote.done) {
+            markDone();
+        }
+    }
 
     return noteEl;
 }
 
-addBtn.addEventListener('click', (e) => {
-    const el = createNote('Задача', 'Материалы/место');
-    notesEl.appendChild(el);
+const columns = CLASS_SUFFIXES.map((suffix, index) => ({
+    nameEl: document.querySelector(`.day${ORDINAL_SUFFIXES[index]}Name`),
+    notesContainer: document.querySelector(`.notes${suffix}`),
+    addBtn: document.querySelector(`.noteAdd${suffix}`),
+    dateKey: '',
+}));
+
+const weekLabelEl = document.querySelector('#weekLabel');
+const prevWeekBtn = document.querySelector('#prevWeek');
+const nextWeekBtn = document.querySelector('#nextWeek');
+const todayWeekBtn = document.querySelector('#todayWeek');
+
+let weekOffset = 0;
+
+function renderWeek() {
+    const weekDates = getWeekDates(weekOffset);
+
+    columns.forEach((column, index) => {
+        const date = weekDates[index];
+        column.dateKey = formatDateKey(date);
+        column.nameEl.innerHTML = `${getWeekdayName(date)} ${date.getDate()}.${date.getMonth() + 1}`;
+        column.notesContainer.innerHTML = '';
+        loadNotes(column.dateKey).forEach((savedNote) => {
+            createNote(column.dateKey, column.notesContainer, savedNote);
+        });
+    });
+
+    weekLabelEl.textContent = formatWeekLabel(weekDates);
+    todayWeekBtn.disabled = weekOffset === 0;
+}
+
+columns.forEach((column) => {
+    column.addBtn.addEventListener('click', () => {
+        createNote(column.dateKey, column.notesContainer);
+    });
 });
 
-addBtn2.addEventListener('click', (e) => {
-    const el = createNote('Задача', 'Материалы/место');
-    notesEl2.appendChild(el);
+prevWeekBtn.addEventListener('click', () => {
+    weekOffset -= 1;
+    renderWeek();
 });
 
-addBtn3.addEventListener('click', (e) => {
-    const el = createNote('Задача', 'Материалы/место');
-    notesEl3.appendChild(el);
+nextWeekBtn.addEventListener('click', () => {
+    weekOffset += 1;
+    renderWeek();
 });
 
-addBtn4.addEventListener('click', (e) => {
-    const el = createNote('Задача', 'Материалы/место');
-    notesEl4.appendChild(el);
+todayWeekBtn.addEventListener('click', () => {
+    weekOffset = 0;
+    renderWeek();
 });
 
-addBtn5.addEventListener('click', (e) => {
-    const el = createNote('Задача', 'Материалы/место');
-    notesEl5.appendChild(el);
-});
-
-addBtn6.addEventListener('click', (e) => {
-    const el = createNote('Задача', 'Материалы/место');
-    notesEl6.appendChild(el);
-});
-
-addBtn7.addEventListener('click', (e) => {
-    const el = createNote('Задача', 'Материалы/место');
-    notesEl7.appendChild(el);
-});
+renderWeek();

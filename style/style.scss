@@ -1,4 +1,43 @@
-@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&display=swap');
+
+// Palette
+$color-bg: #F1F3F9;
+$color-accent: #4C4FE0;
+$color-accent-hover: #3D3FC0;
+$color-success: #16A34A;
+$color-success-hover: #128A3E;
+$color-danger: #EF4444;
+
+$color-card: #FFFFFF;
+$color-card-draft: #EEF0FF;
+$color-text: #1E2233;
+$color-text-muted: #5B6072;
+$color-text-faint: rgba(30, 34, 51, 0.4);
+$color-border: #E2E5F0;
+$color-divider: #E2E5F0;
+
+$color-urgent: #EF4444;
+$color-medium: #F59E0B;
+$color-low: #16A34A;
+
+$color-done-bg: #171A26;
+
+// Radii
+$radius-sm: 8px;
+$radius-md: 10px;
+$radius-lg: 14px;
+
+// Spacing scale
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 12px;
+$space-lg: 16px;
+$space-xl: 24px;
+$space-2xl: 40px;
+
+$layout-max-width: 1600px;
+$header-height: 84px;
+$weeknav-height: 52px;
 
 * {
     margin: 0;
@@ -7,52 +46,204 @@
 }
 
 body {
-    background-color: #FBF8F8;
+    background-color: $color-bg;
     font-family: Overpass, sans-serif;
     font-weight: 300;
+    color: $color-text;
+}
+
+input,
+textarea,
+select,
+button {
+    font-family: inherit;
 }
 
 .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     display: flex;
     flex-direction: row;
-    margin: 20px 136px;
+    align-items: center;
+    gap: $space-md;
+    max-width: $layout-max-width;
+    height: $header-height;
+    margin: 0 auto;
+    padding: 0 $space-2xl;
+    background-color: rgba(241, 243, 249, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid $color-divider;
 }
 
 .logoText {
-    font-size: 36px;
-    color: #575445;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: $color-accent;
 }
 
 .header img {
-    margin-left: 10px;
+    display: block;
+    height: 32px;
+}
+
+.weekNav {
+    position: sticky;
+    top: $header-height;
+    z-index: 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-lg;
+    height: $weeknav-height;
+    max-width: $layout-max-width;
+    margin: 0 auto;
+    padding: 0 $space-2xl;
+    background-color: rgba(241, 243, 249, 0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid $color-divider;
+}
+
+.weekNavCenter {
+    display: flex;
+    align-items: center;
+    gap: $space-md;
+}
+
+#weekLabel {
+    display: inline-block;
+    min-width: 150px;
+    font-size: 14px;
+    font-weight: 600;
+    color: $color-text;
+    text-align: center;
+}
+
+#prevWeek,
+#nextWeek {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background-color: $color-accent;
+    color: #FFFFFF;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: $color-accent-hover;
+    }
+}
+
+#todayWeek {
+    border: 1px solid $color-border;
+    background-color: #FFFFFF;
+    color: $color-text;
+    border-radius: $radius-sm;
+    padding: 5px $space-md;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+
+    &:hover:not(:disabled) {
+        background-color: $color-bg;
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
 }
 
 .container {
-    width: 100vw;
+    width: 100%;
+    max-width: $layout-max-width;
     margin: 0 auto;
     display: flex;
     flex-direction: row;
-    padding-right: 15px;
-    padding-left: 15px;
+    align-items: stretch;
+    min-height: calc(100vh - #{$header-height} - #{$weeknav-height});
+    padding: $space-xl $space-xl $space-2xl;
     box-sizing: border-box;
 }
 
-.noteHeader {
+.dayFirst,
+.daySecond,
+.dayThird,
+.dayFourth,
+.dayFifth,
+.daySixth,
+.daySeventh {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    margin-bottom: 8px;
-    max-height: 55px;
+    width: calc(100% / 7);
+    padding: 0 $space-sm;
 }
 
-.noteMainText {
-    max-height: 80px;
+.dayFirst,
+.daySecond,
+.dayThird,
+.dayFourth,
+.dayFifth,
+.daySixth {
+    border-right: 1px solid $color-divider;
 }
 
-.noteActions {
+.dayFirstName,
+.daySecondName,
+.dayThirdName,
+.dayFourthName,
+.dayFifthName,
+.daySixthName,
+.daySeventhName {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+    color: $color-text-muted;
+    text-transform: uppercase;
+    padding: $space-sm $space-xs;
+    margin-bottom: $space-xs;
+}
+
+.noteAdd,
+.noteAdd2,
+.noteAdd3,
+.noteAdd4,
+.noteAdd5,
+.noteAdd6,
+.noteAdd7 {
     display: flex;
-    flex-direction: row;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin: 0 $space-xs $space-md;
+    cursor: pointer;
+    background-color: $color-accent;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(76, 79, 224, 0.35);
+    transition: background-color 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+        background-color: $color-accent-hover;
+        transform: translateY(-1px) scale(1.05);
+    }
+
+    &:active {
+        transform: translateY(0) scale(0.97);
+    }
 }
 
 .notes,
@@ -64,132 +255,271 @@ body {
 .notes7 {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
-    width: 90%;
-    justify-content: space-around;
+    gap: $space-md;
+    width: 100%;
+    flex: 1;
+    min-height: 120px;
+    overflow-y: auto;
+    padding-right: $space-xs;
+    padding-bottom: $space-sm;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(30, 34, 51, 0.18);
+        border-radius: 3px;
+    }
+
+    &:not(:has(.note)) {
+        justify-content: center;
+
+        &::after {
+            content: 'No tasks yet';
+            display: block;
+            text-align: center;
+            font-size: 12px;
+            color: $color-text-faint;
+            border: 1px dashed $color-border;
+            border-radius: $radius-md;
+            padding: $space-xl $space-sm;
+        }
+    }
 }
 
 .note {
     display: flex;
     flex-direction: column;
-    background-color: lightyellow;
-    padding: 16px;
-    margin: 8px;
-    border-radius: 10px;
-    height: 200px;
+    gap: $space-sm;
+    background-color: $color-card-draft;
+    border: 1px solid rgba(30, 34, 51, 0.08);
+    border-left: 4px solid $color-border;
+    padding: $space-lg;
+    border-radius: $radius-lg;
+    min-height: 190px;
     width: 100%;
-    box-shadow: 2px 2px 5px 2px #cacaca;
+    flex-shrink: 0;
+    box-shadow: 0 2px 10px rgba(30, 34, 51, 0.06);
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+    animation: noteIn 0.2s ease;
+
+    &:hover {
+        box-shadow: 0 6px 18px rgba(30, 34, 51, 0.12);
+        transform: translateY(-1px);
+    }
+}
+
+@keyframes noteIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.noteHeader {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-sm;
+}
+
+.noteTitleWrap {
+    flex: 1;
+    min-width: 0;
+}
+
+.noteActions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: $space-xs;
+    flex-shrink: 0;
+}
+
+.noteMainText {
+    display: flex;
+    flex-direction: column;
+    gap: $space-sm;
+}
+
+#noteTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: $color-text;
+    word-break: break-word;
+}
+
+#noteTitleInput {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+#noteText {
+    font-size: 13px;
+    color: $color-text-muted;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+#noteDate {
+    display: inline-block;
+    width: fit-content;
+    font-size: 12px;
+    font-weight: 600;
+    color: #FFFFFF;
+    background-color: $color-accent;
+    padding: 2px $space-sm;
+    border-radius: 20px;
 }
 
 input,
 textarea,
 select {
-    width: 95%;
+    width: 100%;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    padding: 6px $space-sm;
+    background-color: #FFFFFF;
+    font-size: 13px;
+    color: $color-text;
 }
 
-.noteEdit {
-    padding: 4px;
-    cursor: pointer;
+textarea {
+    resize: none;
 }
 
-.noteDelete {
-    padding: 4px;
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 28px;
     cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 10px 6px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%234C4FE0' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: $color-accent;
+    box-shadow: 0 0 0 3px rgba(76, 79, 224, 0.18);
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
-.urgently {
-    background-color: #F5B7B1;
+.note.urgently {
+    border-left-color: $color-urgent;
 }
 
-.undesirable {
-    background-color: #FDEBD0;
+.note.undesirable {
+    border-left-color: $color-medium;
 }
 
+.note.delay {
+    border-left-color: $color-low;
+}
+
+.urgently,
+.undesirable,
 .delay {
-    background-color: #D4EFDF;
-}
-
-.dayFirst,
-.daySecond,
-.dayThird,
-.dayFourth,
-.dayFifth,
-.daySixth {
-    border-right: 1px solid #292C32;
-    min-height: 90vh;
-    width: calc(100vw/7);
-}
-
-.daySeventh {
-    border: none;
-    min-height: 90vh;
-    width: calc(100vw/7);
+    background-color: $color-card;
 }
 
 .noteDone {
-    background-color: #222222;
-    opacity: 0.5;
-}
-
-.dayFirstName,
-.daySecondName,
-.dayThirdName,
-.dayFourthName,
-.dayFifthName,
-.daySixthName,
-.daySeventhName {
-    font-size: 16px;
-    padding-left: 5px;
-    font-weight: 300;
+    background-color: $color-done-bg;
+    opacity: 0.55;
 }
 
 .fa-solid,
 .fa-regular {
-    color: #FFFFFF;
-
-}
-
-.noteAdd,
-.noteSort,
-.noteAdd2,
-.noteSort2,
-.noteAdd3,
-.noteSort3,
-.noteAdd4,
-.noteSort4,
-.noteAdd5,
-.noteSort5,
-.noteAdd6,
-.noteSort6,
-.noteAdd7,
-.noteSort7 {
-    padding: 5px;
-    margin: 5px;
-    cursor: pointer;
-    background-color: #575445;
-    border: none;
-    width: 30px;
-    height: 30px;
+    color: inherit;
 }
 
 .noteEdit,
-.noteDelete,
+.noteDelete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background-color: $color-accent;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
+
+    &:hover:not(:disabled) {
+        background-color: $color-accent-hover;
+    }
+
+    &:disabled {
+        opacity: 0.4;
+        cursor: default;
+    }
+}
+
+.noteDelete:hover:not(:disabled) {
+    background-color: $color-danger;
+}
+
 .noteSave,
 .noteMarkMade {
-    padding: 5px;
-    margin: 5px;
-    cursor: pointer;
-    background-color: #575445;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-sm;
+    width: 100%;
+    height: 38px;
+    margin-top: auto;
     border: none;
-    // width: 30px;
-    // height: 30px;
+    border-radius: $radius-sm;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
+
+    &:disabled {
+        opacity: 0.45;
+        cursor: default;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+    }
+}
+
+.noteSave {
+    background-color: $color-accent;
+
+    &:hover:not(:disabled) {
+        background-color: $color-accent-hover;
+    }
 }
 
 .noteMarkMade {
-    margin-top: auto;
-    margin-bottom: 0;
+    background-color: $color-success;
+
+    &:hover:not(:disabled) {
+        background-color: $color-success-hover;
+    }
 }
